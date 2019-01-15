@@ -17,9 +17,9 @@ def SHUTTER_ID():
 
 @pytest.fixture
 def api(SERVER, PERSONAL_ACCESS_TOKEN):
-    from pysupla import PySuplaAPI
+    from pysupla import SuplaAPI
 
-    return PySuplaAPI(
+    return SuplaAPI(
         server=SERVER,
         personal_access_token=PERSONAL_ACCESS_TOKEN
     )

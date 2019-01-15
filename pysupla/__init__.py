@@ -4,44 +4,40 @@ from __future__ import print_function
 import os.path
 import sys
 import warnings
+from urllib.parse import urljoin
 
 
-from bravado.requests_client import RequestsClient
-from bravado.client import SwaggerClient
-from bravado.swagger_model import load_file
-
-from requests.compat import urljoin, urlsplit
+import requests
 
 
-# For bravado
-warnings.filterwarnings("ignore", module="collections.*")
+class SuplaAPI:
 
+    def __init__(self, server, personal_access_token):
+        self.base_url = f'https://{server}/api/v2.3.0/' 
+        self.session = requests.Session()
+        self.session.headers['Authorization'] = f'Bearer {personal_access_token}'
 
-def PySuplaAPI(server, personal_access_token):
-    http_client = RequestsClient()
-    http_client.set_api_key(
-        server, 
-        'Bearer {}'.format(personal_access_token),
-        param_name='Authorization', param_in='header'
-    )
+    def get_channels(self, include=None, func=None):
+        params = {}
 
-    spec_path = os.path.join(
-        os.path.dirname(sys.modules['pysupla'].__file__),
-        'swagger.json'
-    )
+        if func is not None:
+            params = {'function': ','.join(func)}
 
-    spec = load_file(spec_path)
-    spec['host'] = server
+        with self.session.get(
+            urljoin(self.base_url, 'channels'),
+            params=params
+        ) as resp:
+            return resp.json()
 
-    with warnings.catch_warnings():
-        warnings.simplefilter("ignore")
-        
-        client = SwaggerClient.from_spec(
-            spec,
-            origin_url='https://{}'.format(server),
-            http_client=http_client,
-            config=dict(validate_responses=False)
+    def execute_action(self, channel_id, action, **add_pars):
+        params = dict(
+            action=action
         )
+        params.update(add_pars)
 
-    return client
+        with self.session.patch(
+            urljoin(self.base_url, f'channels/{channel_id}'),
+            json=params
 
+        ) as resp:
+            assert 200 < resp.status_code < 299

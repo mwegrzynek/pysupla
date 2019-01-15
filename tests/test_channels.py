@@ -4,18 +4,28 @@ from __future__ import print_function
 Channel api testing
 '''
 
-from pprint import pprint
-
-def test_list_channels(api):
-    channels = api.Channels.getChannels().response().result
+def test_list_all_channels(api):
+    channels = api.get_channels()
     assert len(channels) > 0
     assert channels[0]['id'] > 0
 
-# def test_interact_with_shutter(api, SHUTTER_ID):
-#     ActionRequest = api.Channels.get_model('ChannelExecuteActionRequest')
-#     pprint(
-#         api
-#         .Channels
-#         .executeAction(id=SHUTTER_ID, body=ActionRequest(action='REVEAL'))
-#         .response().result
-#     )
+def test_list_only_shutters(api):
+    channels = api.get_channels(func=['CONTROLLINGTHEROLLERSHUTTER'])
+
+    assert len(channels) > 0
+    for chan in channels:
+        assert chan['function']['name'] == 'CONTROLLINGTHEROLLERSHUTTER'
+
+def test_list_only_shutters_and_light_switches(api):
+    channels = api.get_channels(func=['CONTROLLINGTHEROLLERSHUTTER', 'LIGHTSWITCH'])
+
+    assert len(channels) > 0
+    for chan in channels:
+        assert chan['function']['name'] in ('LIGHTSWITCH', 'CONTROLLINGTHEROLLERSHUTTER')
+
+def test_open_shutters(api, SHUTTER_ID):
+    api.execute_action(SHUTTER_ID, 'REVEAL')
+
+def test_close_shutters(api, SHUTTER_ID):
+    api.execute_action(SHUTTER_ID, 'SHUT')
+
