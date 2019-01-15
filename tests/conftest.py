@@ -12,6 +12,10 @@ def PERSONAL_ACCESS_TOKEN():
     return os.environ['SUPLA_PERSONAL_ACCESS_TOKEN']
 
 @pytest.fixture
+def SHUTTER_ID():
+    return int(os.environ['SUPLA_SHUTTER_ID'])
+
+@pytest.fixture
 def api(SERVER, PERSONAL_ACCESS_TOKEN):
     from pysupla import PySuplaAPI
 
