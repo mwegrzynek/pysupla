@@ -4,8 +4,6 @@ from __future__ import print_function
 Channel api testing
 '''
 
-from pprint import pprint
-
 def test_list_all_channels(api):
     channels = api.get_channels()
     assert len(channels) > 0
