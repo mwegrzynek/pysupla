@@ -21,10 +21,25 @@ class SuplaAPI:
         params = {}
 
         if func is not None:
-            params = {'function': ','.join(func)}
+            params['function'] = ','.join(func)
+        
+        if include is not None:
+            params['include'] = ','.join(include)
 
         with self.session.get(
             urljoin(self.base_url, 'channels'),
+            params=params
+        ) as resp:
+            return resp.json()
+
+    def get_channel(self, channel_id, include=None):
+        params = {}
+        
+        if include is not None:
+            params['include'] = ','.join(include)
+
+        with self.session.get(
+            urljoin(self.base_url, 'channels/{}'.format(channel_id)),
             params=params
         ) as resp:
             return resp.json()
