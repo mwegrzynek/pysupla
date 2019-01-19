@@ -34,7 +34,7 @@ class SuplaAPI:
 
     def get_channel(self, channel_id, include=None):
         params = {}
-        
+
         if include is not None:
             params['include'] = ','.join(include)
 
@@ -51,7 +51,7 @@ class SuplaAPI:
         params.update(add_pars)
 
         with self.session.patch(
-            urljoin(self.base_url, f'channels/{channel_id}'),
+            urljoin(self.base_url, 'channels/{}'.format(channel_id)),
             json=params
 
         ) as resp:
