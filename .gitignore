@@ -3,3 +3,5 @@
 run_tests
 *egg-info
 .vscode
+build
+dist
