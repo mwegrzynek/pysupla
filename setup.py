@@ -5,7 +5,7 @@ from setuptools import find_packages, setup
 
 HERE = pathlib.Path(__file__).parent
 README = (HERE / "README.md").read_text()
-VERSION = '0.0.1'
+VERSION = '0.0.2'
 
 setup(
     name='pysupla',
