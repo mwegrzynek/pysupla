@@ -22,6 +22,12 @@ class SuplaAPI:
         self.session = requests.Session()
         self.session.headers['Authorization'] = 'Bearer {}'.format(personal_access_token)
 
+    def get_server_info(self):
+         with self.session.get(
+            urljoin(self.base_url, 'server-info')
+        ) as resp:
+            return resp.json()
+
     def get_channels(self, include=None, func=None):
         params = {}
 
